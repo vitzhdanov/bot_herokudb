@@ -1,3 +1,2 @@
-from datetime import datetime
-
-print(datetime.now().strftime('%Y-%m-%d'))
+u = [1,2,3,4,5]
+print(u[u.index(max(u))])
