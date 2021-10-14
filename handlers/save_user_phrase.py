@@ -1,7 +1,8 @@
+from data.data import data
+
 from aiogram import types
 from loader import dp
 import psycopg2
-from data.data import *
 from aiogram.dispatcher import filters
 from datetime import datetime
 
@@ -17,10 +18,11 @@ async def phrases(message: types.Message):
 
     try:
         connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
+            host=data['host'],
+            user=data['user'],
+            database=data['database'],
+            port=data['port'],
+            password=data['password'],
         )
         connection.autocommit = True
 
@@ -46,10 +48,11 @@ async def phrases(message: types.Message):
                 insert_values = (user_phrase, user_id, user_name, date_time)
                 cursor.execute(insert_command, insert_values)
                 await message.answer('Сохранил')
+                print('Save')
             else:
                 cursor.execute("""SELECT DISTINCT(date_time), user_name FROM user_phrases WHERE user_phrase=%s""", (user_phrase,))
-                data = str(cursor.fetchall()[0]).replace('(', '').replace(')', '').replace(',', '').replace("'", '').split()
-                await message.answer(f'Фраза уже была добавлена {data[0]} юзером {data[1]}')
+                data_user = str(cursor.fetchall()[0]).replace('(', '').replace(')', '').replace(',', '').replace("'", '').split()
+                await message.answer(f'Фраза уже была добавлена {data_user[0]} юзером {data_user[1]}')
 
     except Exception as ex:
         print(f'[INFO] - {ex}')

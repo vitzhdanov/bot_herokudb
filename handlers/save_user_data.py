@@ -11,10 +11,11 @@ async def test(message: types.Message):
     user_nick = message.chat['username'] or message.chat['first_name']
     try:
         connection = psycopg2.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database
+            host=data['host'],
+            user=data['user'],
+            database=data['database'],
+            port=data['port'],
+            password=data['password'],
         )
         connection.autocommit = True
         with connection.cursor() as cursor:
